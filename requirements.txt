@@ -1,3 +1,5 @@
 openai
 docling
 python-dotenv
+PyPDF2
+python-docx

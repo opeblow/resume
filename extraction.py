@@ -1,32 +1,44 @@
-
+import os
 import re
-from docling.document_converter import DocumentConverter
+import string
+import PyPDF2
+from docx import Document
 
 
 def extract_text_from_resume(file_path:str)->str:
-    """Extracts text from resume,be it a pdf or docx"""
-    supported_format=(".pdf",".docx")
+    """Extracts text from resume,either a pdf or docx"""
+    if file_path.lower().endswith('.pdf'):
+        try:
+            with open(file_path,'rb')as file:
+                pdf_reader=PyPDF2.PdfReader(file)
+                text=""
+                for page in pdf_reader.pages:
+                    text+=page.extract_text()
+                return text.strip()
+        except Exception as e:
+            raise RuntimeError(f"Error extracting PDF:{e}")
+        
+    elif file_path.lower().endswith('.docx'):
+        try:
+            doc=Document(file_path)
+            text="\n".join([paragraph.text for paragraph in doc.paragraphs])
+            return text.strip()
+        
+        except Exception as e:
+            raise RuntimeError(f"Error extracting DOCX :{e}")
+        
+    else:
+        raise ValueError("Unsupported file format.Pleasr upload a PDF or DOCX file")
 
-    if not file_path.lower().endswith(supported_format):
-        raise ValueError("Unsupported file format.Please upload a PDF OR DOCX file as resume.")
-    try:
-        converter=DocumentConverter()
-        result=converter.convert(file_path)
-        text=result.document.export_to_text().strip()
-
-    except Exception as e:
-        raise RuntimeError(f"Error extrcting text with Docling:{e}")
-    
-
-    return text
 
 
 def clean_text(text:str)->str:
     """Clean texts by removing punctuation,symbols,and extra whitespace """
-    text=re.sub(r"\r\n|\r|\n","",text)
-    text=re.sub(r"\s+","",text)
+    text=text.translate(str.maketrans("","",string.punctuation))
+    text=re.sub(r"[^a-zA-Z0-9\s]"," ",text)
+    text=re.sub(r"\s+"," ",text)
     text=text.lower().strip()
-
+ 
     return text
 
 
