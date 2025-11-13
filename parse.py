@@ -18,14 +18,20 @@ def parse_resume(resume_text:str)->dict:
         raise ValueError('OPENAI_API_KEY not found in ,env')
     
     client=OpenAI(api_key=api_key)
-    prompt=f"""You  are a resume parsing assistant.Extract only the following fields from the resume below and return pure JSON(no markdown,no extra text)
-    Fields to extract:
-    - All technical skills
-    - Total years of professional experience (as a string,e.g "5 years")
-    - All degrees/education entries
-    - All job titles
+    prompt=f"""Extract the following information from this resume and return ONLY a JSON object with these exact keys: 
+    {{
+       "skills":["list of technical skills"],
+       "experience":["number of years as a string,e.g. '5 years'"],
+       "education":["list of degrees or education"],
+       "job_titles":["list of job titles"]
+    
+    
+
+    }}
+    if any field is not found,use an empty list [] for lists or "Not specified" for experience
     Resume:
     {resume_text}
+Return ONLY the JSON object,nothing else.
 """
     try:
         response=client.chat.completions.create(
@@ -36,24 +42,48 @@ def parse_resume(resume_text:str)->dict:
 
             ],
             temperature=0,
-            response_format={"type":"json_object"}
+            
         )
         raw=response.choices[0].message.content.strip()
         json_str=re.sub(r"^```(?:json)?\s*|```$","",raw,flags=re.MULTILINE).strip()
         parsed=json.loads(json_str)
-        expected={"skills","experience","education","job_titles"}
-        missing=expected - parsed.keys()
 
+        result={
+            "skills":parsed.get("skills",[]),
+            "experience":parsed.get("experience","Not specified"),
+            "education":parsed.get("education",[]),
+            "job_titles":parsed.get("job_titles",[])
 
-        if missing:
-            raise ValueError(f"Missing keys in AI output:{missing}")
+        }
+        if not isinstance (result["skills"],list):
+            result["skills"]=[result["skills"]] if result["skills"] else []
+        if not isinstance (result["education"],list):
+            result["education"]=[result["education"]] if result["education"] else []
+        if not isinstance (result["job_titles"],list):
+            result ["job_titles"]=[result["job_titles"]] if result["job_titles"] else []
 
-        return parsed
+        return result
     except json.JSONDecodeError as e:
-        return {"error":"JSON decode failed","raw":raw,"exception":str(e)}
-    
-    except Exception as e:
-        return {"error":str(e),"raw":getattr(e,"response","no response")}
+        print(f"JSON decode error:{e}")
+        print(f"Raw responsee:{raw}")
+        return {
+            "skills":[],
+            "experience":"Not specified",
+            "education":[],
+            "job_titles":[],
+            "error":"Failed to parse JSON"
+        }
+    except Exception as e :
+        print(f"Error:{e}")
+        return {
+            "skills":[],
+            "experience":"Not specified",
+            "education":[],
+            "job_titles":[],
+            "error":str(e)
+        }
+
+
 
     
 
