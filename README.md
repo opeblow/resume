@@ -35,11 +35,11 @@ Output
 JSON
 
 
- [POST /analyze] 
-     ↓
-[Parse Resume] → [Extract Skills/Exp] → [GPT-4o: Tech Qs] → [GPT-4o: Behav Qs] → [Format JSON] → [200 OK]
-     ↑                 ↑                        ↑                     ↑
-  PyPDF2            regex + JSON             openai API           openai API
+
+     
+[Enter resume] → [Extract text from resume] →[parse resume]->[Extract Skills/Exp] [GPT-4o: Tech Qs] → [GPT-4o: Behav Qs] → [Format JSON] 
+                   
+                
 
 
 git clone https://github.com/opeblow/resume
@@ -59,3 +59,4 @@ pip install -r requirements.txt
 └── README.md
 |__.env
 |__.gitignore
+
