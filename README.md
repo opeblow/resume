@@ -1,5 +1,31 @@
 # AI Resume Parser
 
+## Color Palette
+
+### Light Mode
+| Variable | Color | Hex |
+|----------|-------|-----|
+| Text | Gray | `#6b6375` |
+| Text (Headings) | Near Black | `#08060d` |
+| Background | White | `#fff` |
+| Border | Light Gray | `#e5e4e7` |
+| Code Background | Off White | `#f4f3ec` |
+| Accent | Purple | `#aa3bff` |
+| Accent Background | Light Purple | `rgba(170, 59, 255, 0.1)` |
+| Accent Border | Medium Purple | `rgba(170, 59, 255, 0.5)` |
+
+### Dark Mode
+| Variable | Color | Hex |
+|----------|-------|-----|
+| Text | Light Gray | `#9ca3af` |
+| Text (Headings) | Off White | `#f3f4f6` |
+| Background | Dark | `#16171d` |
+| Border | Dark Gray | `#2e303a` |
+| Code Background | Darker | `#1f2028` |
+| Accent | Light Purple | `#c084fc` |
+| Accent Background | Light Purple | `rgba(192, 132, 252, 0.15)` |
+| Accent Border | Medium Purple | `rgba(192, 132, 252, 0.5)` |
+
 <p align="center">
   AI-powered resume parser that extracts structured data and generates custom interview questions.
 </p>
@@ -41,7 +67,7 @@ Resume Parser is an AI-powered tool that:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-repo/resume-parser.git
+git clone https://github.com/opeblow/resume.git
 cd resume-parser
 ```
 
