@@ -1,0 +1,150 @@
+.app {
+  min-height: 100vh;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.file-input-wrapper {
+  position: relative;
+}
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.file-label {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: #fff;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-label:hover {
+  border-color: #666;
+  background: #f0f0f0;
+}
+
+.upload-form button {
+  padding: 0.75rem 2rem;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.upload-form button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.upload-form button:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+.error {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.results {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.parsed-data {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.parsed-data h2,
+.questions h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.parsed-data pre {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+
+.questions {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.questions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 600px) {
+  .questions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.question-section h3 {
+  color: #2563eb;
+  margin-bottom: 1rem;
+}
+
+.question-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.question-section li {
+  padding: 0.75rem;
+  background: #fff;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  border-left: 3px solid #2563eb;
+}

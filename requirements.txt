@@ -1,5 +1,6 @@
-openai
-docling
-python-dotenv
-PyPDF2
-python-docx
+openai>=1.0.0
+python-dotenv>=1.0.0
+PyPDF2>=3.0.0
+python-docx>=1.0.0
+flask>=3.0.0
+flask-cors>=4.0.0

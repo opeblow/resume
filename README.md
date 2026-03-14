@@ -1,62 +1,181 @@
- Resume-to-Interview-Questions AIAI-powered resume parser that generates custom technical & behavioral interview questions
+# AI Resume Parser
 
-Built with raw Python + OpenAI API — no frameworks, no LangChain, no agents. FeaturesUpload a PDF or text resume
+<p align="center">
+  AI-powered resume parser that extracts structured data and generates custom interview questions.
+</p>
 
-Extract skills, experience, and role
+## Table of Contents
 
-Generate 5 hard technical questions tailored to the candidate
+*   [Overview](#overview)
+*   [Features](#features)
+*   [Prerequisites](#prerequisites)
+*   [Installation](#installation)
+*   [Configuration](#configuration)
+*   [Usage](#usage)
+*   [Project Structure](#project-structure)
+*   [Troubleshooting](#troubleshooting)
 
-Generate 4 behavioral questions focused on leadership, teamwork, and problem-solving
+## Overview
 
-Return clean JSON in under 3 seconds
+Resume Parser is an AI-powered tool that:
 
-Perfect for:Mock interviews
+1.  Extracts text from PDF or DOCX resume files
+2.  Parses structured data (skills, experience, education, job titles) using OpenAI GPT-4o
+3.  Generates tailored technical and behavioral interview questions
 
-Recruiters scaling screening
+## Features
 
-Self-assessment & prep
+*   **Multi-format support**: PDF and DOCX resume parsing
+*   **Structured extraction**: Skills, experience, education, job titles
+*   **Interview question generation**: 5 technical + 5 behavioral questions
+*   **Clean JSON output**: Easy integration with other systems
+*   **Command-line interface**: Simple and efficient workflow
 
-Tech StackComponent
+## Prerequisites
 
-Tech Used
+*   Python 3.10 or higher
+*   OpenAI API key
 
-PDF Parsing
+## Installation
 
-PyPDF2
+### 1. Clone the repository
 
-Text Processing
+```bash
+git clone https://github.com/your-repo/resume-parser.git
+cd resume-parser
+```
 
-Python regex + string logic
-AI Engine
+### 2. Create a virtual environment (recommended)
 
-openai (gpt-4o)
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-Output
-JSON
+### 3. Install dependencies
 
-
-
-     
-[Enter resume] → [Extract text from resume] →[parse resume]->[Extract Skills/Exp] [GPT-4o: Tech Qs] → [GPT-4o: Behav Qs] → [Format JSON] 
-                   
-                
-
-
-git clone https://github.com/opeblow/resume
-
-
+```bash
 pip install -r requirements.txt
- OPENAI_API_KEY="sk-..."
- 
- python main.py
+```
 
-├── main.py              
-├── parse.py             
-├── extraction.py            
-├── requirements.txt
-├── question _generator.py        
-├── sample_resume.pdf
-└── README.md
-|__.env
-|__.gitignore
+### 4. Configure environment variables
 
+Create a `.env` file in the project root:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and add your OpenAI API key:
+
+```
+OPENAI_API_KEY=sk-your-api-key-here
+```
+
+Optional configuration (defaults shown):
+
+```
+OPENAI_MODEL=gpt-4o
+OPENAI_MAX_TOKENS=4096
+```
+
+## Usage
+
+### Basic usage
+
+```bash
+python main.py path/to/resume.pdf
+```
+
+### With output file
+
+```bash
+python main.py path/to/resume.pdf -o output.json
+```
+
+### Verbose logging
+
+```bash
+python main.py path/to/resume.pdf -v
+```
+
+### Command-line options
+
+| Option | Description |
+|--------|-------------|
+| `file` | Path to resume file (PDF or DOCX) |
+| `-o, --output` | Path to save JSON output |
+| `-v, --verbose` | Enable verbose logging |
+
+### Using as a Python module
+
+```python
+from src.resume_parser.extraction import extract_text_from_resume, clean_text
+from src.resume_parser.parser import parse_resume
+from src.resume_parser.question_generator import generate_questions
+
+# Extract text
+raw_text = extract_text_from_resume("resume.pdf")
+cleaned = clean_text(raw_text)
+
+# Parse resume
+parsed = parse_resume(cleaned)
+
+# Generate questions
+questions = generate_questions(parsed)
+
+print(parsed.to_dict())
+print(questions.to_dict())
+```
+
+## Project Structure
+
+```
+resume-parser/
+├── src/
+│   └── resume_parser/
+│       ├── __init__.py          # Package initialization
+│       ├── cli.py               # Command-line interface
+│       ├── config.py            # Configuration management
+│       ├── constants.py        # Application constants
+│       ├── extraction.py       # Text extraction (PDF/DOCX)
+│       ├── logging_config.py   # Logging configuration
+│       ├── parser.py            # Resume parsing logic
+│       └── question_generator.py # Question generation
+├── main.py                      # Entry point
+├── requirements.txt              # Python dependencies
+├── .env                         # Environment variables (create this)
+└── README.md                    # This file
+```
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `OPENAI_API_KEY` | Yes | - | OpenAI API key |
+| `OPENAI_MODEL` | No | `gpt-4o` | OpenAI model to use |
+| `OPENAI_MAX_TOKENS` | No | `4096` | Max tokens for API calls |
+
+## Troubleshooting
+
+### "OPENAI_API_KEY not found"
+
+Make sure your `.env` file exists and contains a valid `OPENAI_API_KEY`.
+
+### "Unsupported file format"
+
+Ensure your resume is in PDF or DOCX format.
+
+### "Failed to extract text"
+
+The PDF may be scanned or password-protected. Ensure it's a text-based PDF.
+
+### API rate limits
+
+If you hit rate limits, you may need to upgrade your OpenAI plan or add retry logic.
+
+## License
+
+MIT License
