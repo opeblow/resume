@@ -57,5 +57,29 @@ def parse_resume_endpoint():
 def health():
     return jsonify({'status': 'ok'})
 
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    data = request.get_json()
+    
+    if not data or 'message' not in data:
+        return jsonify({'error': 'No message provided'}), 400
+    
+    message = data['message']
+    resume_context = data.get('resume_context', {})
+    conversation_history = data.get('conversation_history', [])
+    
+    try:
+        from src.resume_parser.question_generator import generate_followup_response
+        
+        response = generate_followup_response(
+            message=message,
+            resume_context=resume_context,
+            conversation_history=conversation_history
+        )
+        
+        return jsonify({'response': response})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

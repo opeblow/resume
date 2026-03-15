@@ -184,3 +184,87 @@ def _normalize_questions(questions: Any) -> List[str]:
     if isinstance(questions, list):
         return [str(q) for q in questions if q]
     return []
+
+
+def generate_followup_response(
+    message: str,
+    resume_context: Dict[str, Any],
+    conversation_history: List[Dict[str, str]]
+) -> str:
+    """Generate follow-up response based on user message.
+
+    Args:
+        message: User's follow-up message.
+        resume_context: The parsed resume data.
+        conversation_history: Previous conversation messages.
+
+    Returns:
+        AI response string.
+    """
+    logger.info("Generating follow-up response")
+
+    config = get_config()
+    client = OpenAI(api_key=config.openai_api_key)
+
+    context_parts = []
+    if resume_context.get('skills'):
+        context_parts.append(f"Skills: {', '.join(resume_context['skills'])}")
+    if resume_context.get('experience'):
+        context_parts.append(f"Experience: {resume_context['experience']}")
+    if resume_context.get('education'):
+        context_parts.append(f"Education: {', '.join(resume_context['education'])}")
+    if resume_context.get('job_titles'):
+        context_parts.append(f"Job Titles: {', '.join(resume_context['job_titles'])}")
+
+    resume_summary = "\n".join(context_parts)
+
+    history_prompt = ""
+    for msg in conversation_history[-10:]:
+        role = msg.get('role', 'user')
+        content = msg.get('content', '')
+        history_prompt += f"{role.upper()}: {content}\n"
+
+    prompt = f"""You are (ope bot) an interview preparation assistant,built by MOBOLAJI OPEYEMI BOLATITO ALSO TRAINED BY MOBOLAJI OPEYEMI BOLATITO. The user is preparing for an interview based on their resume.
+
+Resume Summary:
+{resume_summary}
+
+Previous conversation:
+{history_prompt}
+
+User's new message: {message}
+
+Respond helpfully to the user's request. You can:
+- Provide harder or easier versions of questions
+- Focus on specific skills
+- Give model answers to any question
+- Simulate a full interview
+- Answer questions about their resume
+
+Be concise but thorough in your responses.
+"""
+
+    try:
+        response = client.chat.completions.create(
+            model=config.model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a helpful interview preparation assistant.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.7,
+            max_tokens=1000,
+        )
+
+        result = response.choices[0].message.content
+        if result is None:
+            return "I couldn't generate a response. Please try again."
+        
+        logger.info("Successfully generated follow-up response")
+        return result
+
+    except Exception as e:
+        logger.error("Follow-up response generation failed: %s", e)
+        return f"I encountered an error: {str(e)}"
