@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import './App.css'
 
-const API_BASE = 'http://localhost:5000/api'
+const API_BASE = 'https://resume-hi9z.onrender.com/api'
 
 const progressSteps = [
   { key: 'uploading', message: 'Uploading resume...' },
